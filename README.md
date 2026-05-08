@@ -206,6 +206,56 @@ func init() {
 }
 ```
 
+### Code Generation from Real Code (DTO mapping use case)
+
+Use this when one mapping pair is called on hot path (API response mapping, event projection, ETL transform).
+
+Example project layout:
+
+```text
+internal/user/
+  entity.go
+  dto.go
+  mapper_gen.go   # generated
+```
+
+`entity.go`:
+
+```go
+package user
+
+//go:generate go run github.com/expego/fastcopier/cmd/fastcopier-gen -src=UserEntity -dst=UserDTO -out=mapper_gen.go
+
+type UserEntity struct {
+    ID    int64
+    Name  string
+    Email string
+}
+
+type UserDTO struct {
+    ID    int64
+    Name  string
+    Email string
+}
+```
+
+Generate copier from real types:
+
+```bash
+go generate ./internal/user
+```
+
+Generated file auto-registers copier in `init()`. Then regular API stays unchanged:
+
+```go
+var dto UserDTO
+if err := fastcopier.Copy(&dto, &entity); err != nil {
+    return err
+}
+```
+
+`fastcopier.Copy` now routes this pair to generated function (no reflection for this mapping pair).
+
 ### Struct Tags
 
 ```go
