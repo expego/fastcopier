@@ -1,0 +1,18 @@
+goos: darwin
+goarch: arm64
+pkg: github.com/expego/fastcopier/benchmarks
+cpu: Apple M4
+BenchmarkManual_Simple-10         	1000000000	         0.2396 ns/op	       0 B/op	       0 allocs/op
+BenchmarkFastCopier_Simple-10     	39528873	        91.51 ns/op	       0 B/op	       0 allocs/op
+BenchmarkClone_Simple-10          	28579404	       125.3 ns/op	     128 B/op	       2 allocs/op
+BenchmarkManual_Nested-10         	148171183	        24.22 ns/op	      96 B/op	       2 allocs/op
+BenchmarkFastCopier_Nested-10     	23005288	       156.4 ns/op	       0 B/op	       0 allocs/op
+BenchmarkClone_Nested-10          	14190146	       252.9 ns/op	     368 B/op	       6 allocs/op
+BenchmarkManual_Complex-10        	22857244	       157.3 ns/op	     568 B/op	       5 allocs/op
+BenchmarkFastCopier_Complex-10    	 7737308	       393.6 ns/op	      96 B/op	       6 allocs/op
+BenchmarkClone_Complex-10         	 5824263	       610.3 ns/op	    1088 B/op	      16 allocs/op
+BenchmarkManual_Deep-10           	 4371450	       835.9 ns/op	    4936 B/op	      20 allocs/op
+BenchmarkFastCopier_Deep-10       	 3663366	       988.7 ns/op	    1104 B/op	      18 allocs/op
+BenchmarkClone_Deep-10            	 3448993	      1044 ns/op	    1425 B/op	      20 allocs/op
+PASS
+ok  	github.com/expego/fastcopier/benchmarks	47.161s
