@@ -1,0 +1,13 @@
+.PHONY: test bench coverage lint
+
+test:
+	go test -v ./...
+
+bench:
+	go test -bench=. -benchmem -benchtime=3s ./...
+
+coverage:
+	go test -cover ./...
+
+lint:
+	go vet ./...

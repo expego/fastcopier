@@ -1,0 +1,83 @@
+name: Benchmarks
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  schedule:
+    # Run weekly on Monday at 00:00 UTC to catch new competitor lib versions
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  benchmark:
+    name: Run benchmarks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Checkout the actual PR branch so we can push back to it
+          ref: ${{ github.head_ref || github.ref_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.21"
+          cache: false
+
+      - name: Update competitor libraries to latest versions
+        working-directory: benchmarks
+        run: |
+          go get -u github.com/jinzhu/copier@latest
+          go get -u github.com/tiendc/go-deepcopy@latest
+          go get -u github.com/ulule/deepcopier@latest
+          go get -u github.com/go-viper/mapstructure/v2@latest
+          go get -u github.com/huandu/go-clone@latest
+          go mod tidy
+
+      - name: Run benchmarks (with generated code)
+        working-directory: benchmarks
+        run: |
+          { go version; go test -bench=. -benchmem -benchtime=3s -count=1; } | tee benchmark_results.txt
+
+      - name: Run benchmarks (pure reflection, no generated code)
+        working-directory: benchmarks
+        run: |
+          go test -bench='BenchmarkManual|BenchmarkFastCopier|BenchmarkClone' \
+            -tags fastcopier_no_gen -benchmem -benchtime=3s -count=1 \
+            | tee benchmark_results_nogen.txt
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: |
+            benchmarks/benchmark_results.txt
+            benchmarks/benchmark_results_nogen.txt
+          retention-days: 90
+
+      - name: Update README with benchmark results
+        run: |
+          python3 scripts/update-readme.py \
+            benchmarks/benchmark_results.txt \
+            benchmarks/benchmark_results_nogen.txt \
+            README.md
+
+      - name: Commit updated README
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          if git diff --cached --quiet; then
+            echo "No changes to README.md"
+          else
+            git commit -m "chore: update benchmark results in README [skip ci]"
+            git push
+          fi
