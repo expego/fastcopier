@@ -75,73 +75,11 @@
 - Lazy initialization of cache entries
 - Memory-efficient cache eviction
 
-## Proposed Architecture
+## Notes
 
-```
-fastcopier/
-├── copier.go           # Public API
-├── codegen/            # Code generation tools
-│   ├── generator.go    # AST-based code generator
-│   └── templates.go    # Copy function templates
-├── reflect/            # Reflection-based fallback
-│   ├── cache.go        # Field mapping cache
-│   └── copy.go         # Optimized reflection copier
-├── unsafe/             # Unsafe optimizations (optional)
-│   └── direct.go       # Direct memory copy for compatible types
-└── bench/              # Benchmarks vs competitors
-    ├── simple_test.go
-    ├── nested_test.go
-    └── comparison_test.go
-```
+This document captures initial market and performance research context only.
+Current architecture, implementation details, and benchmarks live in:
 
-## Performance Targets
-
-| Scenario | Target Performance | vs jinzhu/copier | vs tiendc/go-deepcopy |
-|----------|-------------------|------------------|----------------------|
-| Simple struct (5 fields) | < 50 ns/op | 20-100x faster | 2-5x faster |
-| Nested struct (3 levels) | < 200 ns/op | 10-50x faster | 1.5-3x faster |
-| Slice of structs (100 items) | < 5000 ns/op | 5-20x faster | 1.2-2x faster |
-| With type conversion | < 100 ns/op | 10-30x faster | 1.5-3x faster |
-
-## Key Features to Implement
-
-1. **Zero-config usage**: Works out of the box without code generation
-2. **Optional codegen**: Generate optimized code for critical paths
-3. **Type conversion**: Automatic conversion between compatible types
-4. **Deep copy**: Handle nested structs, slices, maps
-5. **Field mapping**: Support struct tags for custom field names
-6. **Concurrent-safe**: Thread-safe caching and operations
-7. **Generics support**: Type-safe API using Go 1.18+ generics
-
-## Implementation Phases
-
-### Phase 1: Core Reflection Engine (MVP)
-- Basic struct-to-struct copy using optimized reflection
-- Field mapping cache
-- Simple type conversion
-- Benchmark framework
-
-### Phase 2: Code Generation
-- AST-based code generator
-- Template-based copy function generation
-- Integration with go:generate
-
-### Phase 3: Advanced Features
-- Deep copy for complex types
-- Custom field mapping via tags
-- Unsafe optimizations (opt-in)
-- Partial copy (field masking)
-
-### Phase 4: Optimization & Polish
-- Profile-guided optimization
-- Memory allocation reduction
-- Documentation and examples
-- Production readiness
-
-## Next Steps
-
-1. Set up project structure
-2. Implement Phase 1 (reflection-based MVP)
-3. Create benchmark suite comparing all 4 libraries
-4. Iterate on optimizations based on benchmark results
-5. Add code generation in Phase 2
+- `ARCHITECTURE.md`
+- `docs/BENCHMARKS.md`
+- `README.md`

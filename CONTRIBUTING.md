@@ -94,6 +94,8 @@ go vet ./...
 ### Tests
 
 - Every new feature or bug fix must be accompanied by a test.
+- Keep tests next to code under test (`*_test.go` in same package directory).
+- Do not move unit tests into top-level `./test` or `./tests`; that breaks Go package-local test workflow and makes package boundaries less clear.
 - Tests that exercise the public API live in `*_test.go` files with `package fastcopier_test`.
 - Internal/white-box tests live in files with `package fastcopier`.
 - Example tests (`Example*`) serve as both documentation and correctness checks.
