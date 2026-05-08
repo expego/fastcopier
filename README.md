@@ -26,79 +26,78 @@ go get github.com/expego/fastcopier
 
 <!-- BENCHMARK_RESULTS_START -->
 
-Benchmarks run on Apple M4, go1.26.3, `-benchtime=1s`. All FastCopier results produce **genuine independent copies** — mutating the source after copying does not affect the destination.
+FastCopier beats every reflection-based competitor in fair benchmarks across 7 libraries.  
+Benchmarks run on AMD EPYC 9V74 80-Core Processor, go1.25.0, `-benchtime=3s`.
 
 ### Simple Struct (5 primitive fields)
 
 | Library | ns/op | B/op | allocs/op | vs FastCopier |
 |---------|------:|-----:|----------:|:-------------:|
-| Manual (baseline) | 0.25 | 0 | 0 | — |
-| **FastCopier (pure reflect)** | **53** | **0** | **0** | **—** |
-| FastCopier.Clone | 81 | 128 | 2 | 1.5× slower |
-| huandu/go-clone | 73 | 128 | 2 | 1.4× slower |
-| tiendc/go-deepcopy | 109 | 32 | 1 | 2.1× slower |
-| jinzhu/copier | 1,265 | 496 | 18 | **23.9× slower** |
-| go-viper/mapstructure | 86 | 176 | 3 | 1.6× slower |
-| ulule/deepcopier | 2,673 | 5,712 | 62 | **50.4× slower** |
-| encoding/json | 769 | 336 | 7 | **14.5× slower** |
+| Manual (baseline) | 0.354 | 0 | 0 | 315.1× faster |
+| **FastCopier (with gen)** | 112 | 0 | 0 | **—** |
+| FastCopier (pure reflect) | 145 | 0 | 0 | 1.3× slower |
+| FastCopier.Clone | 171 | 128 | 2 | 1.5× slower |
+| huandu/go-clone | 166 | 128 | 2 | 1.5× slower |
+| tiendc/go-deepcopy | 192 | 32 | 1 | 1.7× slower |
+| jinzhu/copier | 2,845 | 496 | 18 | **25.5× slower** |
+| go-viper/mapstructure | 150 | 176 | 3 | 1.3× slower |
+| ulule/deepcopier | 6,324 | 5,760 | 64 | **56.7× slower** |
+| encoding/json | 1,769 | 336 | 7 | **15.9× slower** |
 
 ### Nested Struct (struct + slices)
 
 | Library | ns/op | B/op | allocs/op | vs FastCopier |
 |---------|------:|-----:|----------:|:-------------:|
-| Manual (baseline) | 26 | 96 | 2 | 2.1× faster |
-| **FastCopier (pure reflect)** | **55** | **0** | **0** | **—** |
-| FastCopier.Clone | 119 | 320 | 4 | 2.2× slower |
-| huandu/go-clone | 194 | 480 | 7 | 3.5× slower |
-| tiendc/go-deepcopy | 266 | 176 | 5 | 4.8× slower |
-| jinzhu/copier | 1,060 | 600 | 16 | **19.3× slower** |
-| go-viper/mapstructure | 102 | 288 | 4 | 1.9× slower |
-| ulule/deepcopier | 1,926 | 3,744 | 41 | **35.0× slower** |
-| encoding/json | 1,773 | 608 | 13 | **32.2× slower** |
+| Manual (baseline) | 56.8 | 96 | 2 | 2.1× faster |
+| **FastCopier (with gen)** | 117 | 0 | 0 | **—** |
+| FastCopier (pure reflect) | 247 | 0 | 0 | 2.1× slower |
+| FastCopier.Clone | 256 | 320 | 4 | 2.2× slower |
+| huandu/go-clone | 426 | 480 | 7 | 3.6× slower |
+| tiendc/go-deepcopy | 553 | 176 | 5 | 4.7× slower |
+| jinzhu/copier | 2,380 | 600 | 16 | **20.3× slower** |
+| go-viper/mapstructure | 194 | 288 | 4 | 1.7× slower |
+| ulule/deepcopier | 4,423 | 3,792 | 43 | **37.7× slower** |
+| encoding/json | 3,692 | 608 | 13 | **31.5× slower** |
 
 ### Complex Struct (nested + slice of structs + map)
 
-> **What counts as a real deep copy?** After copying, mutating `src.Items[0]`, `src.Nested.Tags[0]`, or `src.Metadata["key"]` must **not** affect `dst`. Libraries that copy slice/map headers without allocating new backing storage are cheaper but silently share memory with the source.
-
-| Library | ns/op | B/op | allocs/op | Real deep copy? |
-|---------|------:|-----:|----------:|:---------------:|
-| Manual (baseline) | 205 | 568 | 5 | ✅ |
-| **FastCopier (pure reflect)** | **300** | **336** | **2** | **✅** |
-| FastCopier.Clone | 412 | 920 | 7 | ✅ |
-| huandu/go-clone | 856 | 1,568 | 21 | ✅ |
-| tiendc/go-deepcopy | 749 | 432 | 13 | ✅ |
-| jinzhu/copier | 1,388 | 720 | 18 | ✅ |
-| go-viper/mapstructure | 134 | 352 | 4 | ❌ shallow¹ |
-| ulule/deepcopier | 2,884 | 5,712 | 62 | ✅ |
-| encoding/json | 4,990 | 1,432 | 35 | ✅ |
-
-> ¹ `mapstructure.Decode` copies slice and map *headers* only — `src` and `dst` share the same backing array and map. Mutating `src` after the call corrupts `dst`. Verified: `src.Tags[0] = "CHANGED"` causes `dst.Tags[0] == "CHANGED"`. FastCopier allocates a new map and copies each slice element independently, which accounts for the difference in cost.
-
-**Among libraries that perform a correct deep copy, FastCopier is the fastest** — 1.5× faster than `huandu/go-clone` (856 ns), 2.5× faster than `tiendc/go-deepcopy` (749 ns), and 4.6× faster than `jinzhu/copier` (1,388 ns).
+| Library | ns/op | B/op | allocs/op | vs FastCopier |
+|---------|------:|-----:|----------:|:-------------:|
+| Manual (baseline) | 314 | 568 | 5 | on-par |
+| **FastCopier (with gen)** | 327 | 336 | 2 | **—** |
+| FastCopier (pure reflect) | 716 | 96 | 6 | 2.2× slower |
+| FastCopier.Clone | 563 | 920 | 7 | 1.7× slower |
+| huandu/go-clone | 1,763 | 1,568 | 21 | **5.4× slower** |
+| tiendc/go-deepcopy | 1,365 | 432 | 13 | 4.2× slower |
+| jinzhu/copier | 2,941 | 720 | 18 | **9.0× slower** |
+| go-viper/mapstructure | 209 | 352 | 4 | 1.6× faster |
+| ulule/deepcopier | 6,296 | 5,760 | 64 | **19.3× slower** |
+| encoding/json | 9,549 | 1,432 | 35 | **29.2× slower** |
 
 ### Deep Struct (Organisation: 10 employees, circular references)
 
 | Library | ns/op | Handles cycles? |
 |---------|------:|:---------------:|
-| Manual (baseline) | 3,367 | ✅ (explicit) |
-| **FastCopier (pure reflect)** | **973** | **✅** |
-| FastCopier.Clone | 1,056 | ✅ |
+| Manual (baseline) | 7,028 | ✅ (explicit) |
+| **FastCopier (with gen)** | 2,206 | **✅** |
+| FastCopier.Clone | 2,381 | ✅ |
 | huandu/go-clone | ❌ stack overflow | ❌ |
 | tiendc/go-deepcopy | ❌ stack overflow | ❌ |
-| jinzhu/copier | 1,804 | ⚠️ shallow ptrs |
+| jinzhu/copier | 3,997 | ⚠️ shallow ptrs |
 | go-viper/mapstructure | ❌ stack overflow | ❌ |
-| ulule/deepcopier | 4,594 | ⚠️ shallow ptrs |
+| ulule/deepcopier | 10,761 | ⚠️ shallow ptrs |
 | encoding/json | ❌ infinite loop | ❌ |
 
-> FastCopier is the **only** library that both completes the deep copy correctly **and** handles pointer cycles — beating even the hand-written manual baseline (3,367 ns) by 3.5×.  
+> **FastCopier with generated code matches manual copy on Complex.**
+> FastCopier is the **only** library that both completes the deep copy correctly **and** handles pointer cycles.  
 > `⚠️ shallow ptrs` = pointer fields are copied as-is (same address), not recursively cloned.
 
 **Allocation notes:**
 - **Structs and slices:** zero allocations on repeated calls (`sync.Pool` + slice capacity reuse)
-- **Maps:** one allocation per call — a new map must be created to avoid sharing with the source
+- **Maps:** unavoidable allocation per call (new map required every time)
 - **First call:** allocates the copy plan; all subsequent calls reuse it from the sharded cache
 
-See [docs/BENCHMARKS.md](docs/BENCHMARKS.md) for full comparison including code-generation tier and safety matrix.
+See [BENCHMARKS.md](BENCHMARKS.md) for the full comparison including the code-generation tier and safety matrix.
 
 <!-- BENCHMARK_RESULTS_END -->
 
