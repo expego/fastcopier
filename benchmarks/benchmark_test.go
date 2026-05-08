@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	fastcopier "github.com/expego/fastcopier"
+	mapstructure "github.com/go-viper/mapstructure/v2"
 	goclone "github.com/huandu/go-clone"
 	"github.com/jinzhu/copier"
-	mapstructure "github.com/go-viper/mapstructure/v2"
 	deepcopy "github.com/tiendc/go-deepcopy"
 	"github.com/ulule/deepcopier"
 )

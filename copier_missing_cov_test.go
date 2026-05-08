@@ -245,8 +245,8 @@ func TestBuildFieldPlan_IgnoreNonCopyable_RequiredSrc_Error(t *testing.T) {
 
 func TestFieldByIndexInit_NilPointerInPath(t *testing.T) {
 	type L2 struct{ X int }
-	type L1 struct{ *L2 }  // anonymous embedded pointer: *L2 may be nil
-	type Top struct{ L1 }  // anonymous embedded struct
+	type L1 struct{ *L2 } // anonymous embedded pointer: *L2 may be nil
+	type Top struct{ L1 } // anonymous embedded struct
 	type Src struct{ X int }
 
 	src := Src{X: 77}

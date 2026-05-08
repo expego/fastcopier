@@ -149,7 +149,7 @@ func (p *structPlan) buildFieldPlan(ctx *Context, dstStructType, srcStructType r
 //   - dm/sm.renamed    — informational only; the resolved key is already in dm/sm.key
 //   - dm/sm.done       — managed by init() to prevent duplicate processing
 //   - dm/sm.field      — the reflect.StructField is only needed for type resolution
-//                        and error messages in buildFieldPlan, not at copy time
+//     and error messages in buildFieldPlan, not at copy time
 func makeFieldPlan(dm, sm *fieldMeta, cp Plan) Plan {
 	return &fieldPlan{
 		elem:         cp,

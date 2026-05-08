@@ -283,8 +283,8 @@ type Tree struct {
 
 func TestDeferredPlan_Tree(t *testing.T) {
 	src := &Tree{
-		Val:  1,
-		Left: &Tree{Val: 2, Left: &Tree{Val: 4}, Right: &Tree{Val: 5}},
+		Val:   1,
+		Left:  &Tree{Val: 2, Left: &Tree{Val: 4}, Right: &Tree{Val: 5}},
 		Right: &Tree{Val: 3},
 	}
 	var dst Tree
@@ -988,4 +988,3 @@ func TestWithFields_NoFieldsOption_CopiesAll(t *testing.T) {
 		t.Errorf("X=%d Y=%d, want X=7 Y=8", dst.X, dst.Y)
 	}
 }
-

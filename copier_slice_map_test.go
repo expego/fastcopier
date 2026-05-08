@@ -342,7 +342,10 @@ func TestCopySliceFlatStructNested(t *testing.T) {
 // TestCopySliceFlatStructInStruct verifies bulk-copy for a struct field of type
 // []FlatStruct (the most common real-world trigger).
 func TestCopySliceFlatStructInStruct(t *testing.T) {
-	type Item struct{ Name string; Price float64 }
+	type Item struct {
+		Name  string
+		Price float64
+	}
 	type Order struct {
 		ID    int
 		Items []Item

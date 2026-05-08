@@ -363,9 +363,9 @@ func classifyType(t types.Type) typeKind {
 // ── Code generation ───────────────────────────────────────────────────────────
 
 type genData struct {
-	PkgName       string
+	PkgName         string
 	HasCopyFallback bool // true when any field uses fastcopier.Copy fallback
-	Funcs         []genFunc
+	Funcs           []genFunc
 }
 
 type genFunc struct {

@@ -19,7 +19,7 @@ func TestSplitComma(t *testing.T) {
 		{"Foo", []string{"Foo"}},
 		{"Foo,Bar", []string{"Foo", "Bar"}},
 		{"Foo , Bar , Baz", []string{"Foo", "Bar", "Baz"}},
-		{",", nil},         // empty segments are dropped
+		{",", nil}, // empty segments are dropped
 		{"  ,Foo,  ", []string{"Foo"}},
 	}
 	for _, tc := range tests {

@@ -29,8 +29,16 @@ func findField(fields []fastcopier.FieldMapping, srcField string) *fastcopier.Fi
 // ── basic struct ──────────────────────────────────────────────────────────────
 
 func TestInspect_BasicStruct(t *testing.T) {
-	type Src struct{ Name string; Age int; Email string }
-	type Dst struct{ Name string; Age int; Email string }
+	type Src struct {
+		Name  string
+		Age   int
+		Email string
+	}
+	type Dst struct {
+		Name  string
+		Age   int
+		Email string
+	}
 
 	plan, err := fastcopier.Inspect(&Dst{}, &Src{})
 	if err != nil {
@@ -47,8 +55,15 @@ func TestInspect_BasicStruct(t *testing.T) {
 // ── partial match — extra src fields ─────────────────────────────────────────
 
 func TestInspect_PartialMatch(t *testing.T) {
-	type Src struct{ Name string; Age int; Email string }
-	type Dst struct{ Name string; Age int }
+	type Src struct {
+		Name  string
+		Age   int
+		Email string
+	}
+	type Dst struct {
+		Name string
+		Age  int
+	}
 
 	plan, err := fastcopier.Inspect(&Dst{}, &Src{})
 	if err != nil {
@@ -160,7 +175,10 @@ func TestInspect_NestedStruct(t *testing.T) {
 // ── String() output ───────────────────────────────────────────────────────────
 
 func TestInspect_StringOutput(t *testing.T) {
-	type Src struct{ Name string; Extra string }
+	type Src struct {
+		Name  string
+		Extra string
+	}
 	type Dst struct{ Name string }
 
 	plan, err := fastcopier.Inspect(&Dst{}, &Src{})

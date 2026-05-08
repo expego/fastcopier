@@ -167,8 +167,8 @@ func ExampleInspect() {
 		log.Fatal(err)
 	}
 
-	fmt.Println(len(plan.Fields))   // 2 fields copied: ID, Name
-	fmt.Println(len(plan.Skipped))  // 1 skipped: Email
+	fmt.Println(len(plan.Fields))  // 2 fields copied: ID, Name
+	fmt.Println(len(plan.Skipped)) // 1 skipped: Email
 	// Output:
 	// 2
 	// 1

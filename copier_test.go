@@ -5,10 +5,10 @@ import (
 )
 
 type SimpleStruct struct {
-	Name  string
-	Age   int
-	Email string
-	Score float64
+	Name   string
+	Age    int
+	Email  string
+	Score  float64
 	Active bool
 }
 
@@ -161,12 +161,12 @@ func TestCopyNonPointer(t *testing.T) {
 
 func TestCopyTypeConversion(t *testing.T) {
 	type Source struct {
-		Age int32
+		Age   int32
 		Score float32
 	}
 
 	type Destination struct {
-		Age int64
+		Age   int64
 		Score float64
 	}
 
