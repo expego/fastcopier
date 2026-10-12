@@ -33,59 +33,59 @@ Benchmarks run on AMD EPYC 9V74 80-Core Processor, go1.25.0, `-benchtime=3s`.
 
 | Library | ns/op | B/op | allocs/op | vs FastCopier |
 |---------|------:|-----:|----------:|:-------------:|
-| Manual (baseline) | 0.353 | 0 | 0 | 313.4× faster |
-| **FastCopier (with gen)** | 110 | 0 | 0 | **—** |
-| FastCopier (pure reflect) | 144 | 0 | 0 | 1.3× slower |
-| FastCopier.Clone | 171 | 128 | 2 | 1.6× slower |
-| huandu/go-clone | 166 | 128 | 2 | 1.5× slower |
-| tiendc/go-deepcopy | 194 | 32 | 1 | 1.8× slower |
-| jinzhu/copier | 2,864 | 496 | 18 | **25.9× slower** |
-| go-viper/mapstructure | 148 | 176 | 3 | 1.3× slower |
-| ulule/deepcopier | 6,349 | 5,760 | 64 | **57.5× slower** |
-| encoding/json | 1,746 | 336 | 7 | **15.8× slower** |
+| Manual (baseline) | 0.273 | 0 | 0 | 314.4× faster |
+| **FastCopier (with gen)** | 85.9 | 0 | 0 | **—** |
+| FastCopier (pure reflect) | 112 | 0 | 0 | 1.3× slower |
+| FastCopier.Clone | 132 | 128 | 2 | 1.5× slower |
+| huandu/go-clone | 127 | 128 | 2 | 1.5× slower |
+| tiendc/go-deepcopy | 149 | 32 | 1 | 1.7× slower |
+| jinzhu/copier | 2,228 | 496 | 18 | **25.9× slower** |
+| go-viper/mapstructure | 116 | 176 | 3 | 1.4× slower |
+| ulule/deepcopier | 4,973 | 5,760 | 64 | **57.9× slower** |
+| encoding/json | 1,359 | 336 | 7 | **15.8× slower** |
 
 ### Nested Struct (struct + slices)
 
 | Library | ns/op | B/op | allocs/op | vs FastCopier |
 |---------|------:|-----:|----------:|:-------------:|
-| Manual (baseline) | 56.4 | 96 | 2 | 2.1× faster |
-| **FastCopier (with gen)** | 119 | 0 | 0 | **—** |
-| FastCopier (pure reflect) | 252 | 0 | 0 | 2.1× slower |
-| FastCopier.Clone | 257 | 320 | 4 | 2.2× slower |
-| huandu/go-clone | 421 | 480 | 7 | 3.5× slower |
-| tiendc/go-deepcopy | 555 | 176 | 5 | 4.7× slower |
-| jinzhu/copier | 2,403 | 600 | 16 | **20.2× slower** |
-| go-viper/mapstructure | 197 | 288 | 4 | 1.7× slower |
-| ulule/deepcopier | 4,424 | 3,792 | 43 | **37.2× slower** |
-| encoding/json | 3,660 | 608 | 13 | **30.8× slower** |
+| Manual (baseline) | 44 | 96 | 2 | 2.1× faster |
+| **FastCopier (with gen)** | 92.3 | 0 | 0 | **—** |
+| FastCopier (pure reflect) | 192 | 0 | 0 | 2.1× slower |
+| FastCopier.Clone | 201 | 320 | 4 | 2.2× slower |
+| huandu/go-clone | 329 | 480 | 7 | 3.6× slower |
+| tiendc/go-deepcopy | 431 | 176 | 5 | 4.7× slower |
+| jinzhu/copier | 1,857 | 600 | 16 | **20.1× slower** |
+| go-viper/mapstructure | 150 | 288 | 4 | 1.6× slower |
+| ulule/deepcopier | 3,460 | 3,792 | 43 | **37.5× slower** |
+| encoding/json | 2,906 | 608 | 13 | **31.5× slower** |
 
 ### Complex Struct (nested + slice of structs + map)
 
 | Library | ns/op | B/op | allocs/op | vs FastCopier |
 |---------|------:|-----:|----------:|:-------------:|
-| Manual (baseline) | 312 | 568 | 5 | on-par |
-| **FastCopier (with gen)** | 327 | 336 | 2 | **—** |
-| FastCopier (pure reflect) | 714 | 96 | 6 | 2.2× slower |
-| FastCopier.Clone | 564 | 920 | 7 | 1.7× slower |
-| huandu/go-clone | 1,729 | 1,568 | 21 | **5.3× slower** |
-| tiendc/go-deepcopy | 1,365 | 432 | 13 | 4.2× slower |
-| jinzhu/copier | 2,958 | 720 | 18 | **9.1× slower** |
-| go-viper/mapstructure | 208 | 352 | 4 | 1.6× faster |
-| ulule/deepcopier | 6,323 | 5,760 | 64 | **19.4× slower** |
-| encoding/json | 9,540 | 1,432 | 35 | **29.2× slower** |
+| Manual (baseline) | 244 | 568 | 5 | on-par |
+| **FastCopier (with gen)** | 255 | 336 | 2 | **—** |
+| FastCopier (pure reflect) | 557 | 96 | 6 | 2.2× slower |
+| FastCopier.Clone | 445 | 920 | 7 | 1.7× slower |
+| huandu/go-clone | 1,346 | 1,568 | 21 | **5.3× slower** |
+| tiendc/go-deepcopy | 1,070 | 432 | 13 | 4.2× slower |
+| jinzhu/copier | 2,290 | 720 | 18 | **9.0× slower** |
+| go-viper/mapstructure | 164 | 352 | 4 | 1.6× faster |
+| ulule/deepcopier | 4,936 | 5,760 | 64 | **19.3× slower** |
+| encoding/json | 7,421 | 1,432 | 35 | **29.1× slower** |
 
 ### Deep Struct (Organisation: 10 employees, circular references)
 
 | Library | ns/op | Handles cycles? |
 |---------|------:|:---------------:|
-| Manual (baseline) | 7,015 | ✅ (explicit) |
-| **FastCopier (with gen)** | 2,169 | **✅** |
-| FastCopier.Clone | 2,356 | ✅ |
+| Manual (baseline) | 5,606 | ✅ (explicit) |
+| **FastCopier (with gen)** | 1,707 | **✅** |
+| FastCopier.Clone | 1,878 | ✅ |
 | huandu/go-clone | ❌ stack overflow | ❌ |
 | tiendc/go-deepcopy | ❌ stack overflow | ❌ |
-| jinzhu/copier | 4,012 | ⚠️ shallow ptrs |
+| jinzhu/copier | 3,120 | ⚠️ shallow ptrs |
 | go-viper/mapstructure | ❌ stack overflow | ❌ |
-| ulule/deepcopier | 10,739 | ⚠️ shallow ptrs |
+| ulule/deepcopier | 8,475 | ⚠️ shallow ptrs |
 | encoding/json | ❌ infinite loop | ❌ |
 
 > **FastCopier with generated code matches manual copy on Complex.**
